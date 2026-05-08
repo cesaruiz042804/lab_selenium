@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+screenshots/
+reporte_pruebas.html
+reporte_fallos.html
+reporte_final.html
