@@ -64,7 +64,20 @@ jobs:
       # ==================================================
 
       - name: Upload HTML Report
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: reporte-pruebas
           path: reporte_pruebas.html
+
+      # ==================================================
+      # Guardar screenshots de fallos
+      # ==================================================
+
+      - name: Upload Screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-fallos
+          path: screenshots/
+          if-no-files-found: ignore
