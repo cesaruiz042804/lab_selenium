@@ -16,7 +16,7 @@ def test_login_exitoso(driver):
         "secret_sauce"
     )
 
-    assert "inventory.html" in driver.current_url
+    assert "pagina_falsa.html" in driver.current_url  # FALLO INTENCIONAL
 
 
 # ======================================================

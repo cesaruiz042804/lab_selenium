@@ -1,7 +1,4 @@
 import pytest
-import os
-
-from datetime import datetime
 
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -35,7 +32,7 @@ def driver():
 
 
 # ======================================================
-# SCREENSHOTS AUTOMÁTICOS
+# SCREENSHOTS INCRUSTADOS EN EL REPORTE HTML
 # ======================================================
 
 @pytest.hookimpl(hookwrapper=True)
@@ -44,24 +41,24 @@ def pytest_runtest_makereport(item, call):
     outcome = yield
     report = outcome.get_result()
 
+    extra = getattr(report, "extra", [])
+
     if report.when == "call" and report.failed:
 
         driver = item.funcargs.get("driver", None)
 
         if driver:
 
-            os.makedirs("screenshots", exist_ok=True)
+            screenshot = driver.get_screenshot_as_base64()
 
-            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-            screenshot_file = (
-                f"screenshots/{item.name}_{timestamp}.png"
+            html = (
+                f'<div>'
+                f'<img src="data:image/png;base64,{screenshot}" '
+                f'alt="screenshot" style="width:304px;height:228px;" '
+                f'onclick="window.open(this.src)" align="right"/>'
+                f'</div>'
             )
 
-            driver.save_screenshot(screenshot_file)
+            extra.append(extras.html(html))
 
-            report.extras = getattr(report, "extras", [])
-
-            report.extras.append(
-                extras.image(screenshot_file)
-            )
+    report.extra = extra
